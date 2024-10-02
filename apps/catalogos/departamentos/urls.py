@@ -5,4 +5,5 @@ app_name = "departamentos"
 
 urlpatterns = [
     path('', DepartamentoApiView.as_view(), name="departamento"),
+    path('<str:pk>/', DepartamentoApiView.as_view()),
 ]

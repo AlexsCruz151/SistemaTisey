@@ -11,23 +11,23 @@ from apps.catalogos.departamentos.models import Departamento
 
 
 class DepartamentoApiView(APIView):
-    def get1(self, request):
-      #departamentos = [de.codigo for de in Departamento.objects.all()]
-      departamentos = list(Departamento.objects.values())
-      return Response(status=status.HTTP_200_OK,data=departamentos)
-      #return Response(status=status.HTTP_200_OK,data={'departamentos': Departamento.objects.all()})
+    # def get1(self, request):
+    #   #departamentos = [de.codigo for de in Departamento.objects.all()]
+    #   departamentos = list(Departamento.objects.values())
+    #   return Response(status=status.HTTP_200_OK,data=departamentos)
+    #   #return Response(status=status.HTTP_200_OK,data={'departamentos': Departamento.objects.all()})
 
     def get(self, request):
         serialize = DepartamentoSerializer(Departamento.objects.all(),many=True)
         return Response(status=status.HTTP_200_OK,data=serialize.data)
 
-    def post1(self, request):
-        # departamento = Departamento()
-        # departamento.codigo = request.data['codigo']
-        # departamento.nombre = request.data['nombre']
-        # departamento.save()
-        Departamento.objects.create(codigo=request.data['codigo'], nombre=request.data['nombre'])
-        return Response(status=status.HTTP_201_CREATED)
+    # def post1(self, request):
+    #     # departamento = Departamento()
+    #     # departamento.codigo = request.data['codigo']
+    #     # departamento.nombre = request.data['nombre']
+    #     # departamento.save()
+    #     Departamento.objects.create(codigo=request.data['codigo'], nombre=request.data['nombre'])
+    #     return Response(status=status.HTTP_201_CREATED)
 
     def post(self, request):
         serialize=DepartamentoSerializer(data=request.data)
