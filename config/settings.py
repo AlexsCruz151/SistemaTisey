@@ -130,17 +130,34 @@ AUTH_USER_MODEL = 'usuarios.User'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Asegura que las vistas requieran autenticación
-    ),
+    )
+    # ,
+    # 'DEFAULT_PERMISSION_CLASSES': (
+    #     'rest_framework.permissions.IsAuthenticated',  # Asegura que las vistas requieran autenticación
+    # ),
 }
 
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Duración del token de acceso
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Duración del token de refresco
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),  # Token de 30 minutos
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),     # Token de refresco de 1 día
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,  # Asegúrate de tener el secret key correcto
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Prefijo para el token
 }
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'JWT Token. Formato: Bearer <tu_token_jwt>',
+        }
+    },
+    'USE_SESSION_AUTH': False,  # Desactiva autenticación basada en sesión
+    'JSON_EDITOR': True,  # Opcional: para facilitar el uso de Swagger
+}
+
