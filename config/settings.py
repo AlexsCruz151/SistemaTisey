@@ -17,6 +17,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 from apps.seguridad.setting_apps import SEGURIDAD_APPS
 from apps.catalogos.setting_apps import CATALOGOS_APPS
+from apps.movimientos.setting_apps import MOVIMIENTOS_APPS
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
-] + SEGURIDAD_APPS + CATALOGOS_APPS
+] + SEGURIDAD_APPS + CATALOGOS_APPS + MOVIMIENTOS_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

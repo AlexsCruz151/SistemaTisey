@@ -31,5 +31,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('catalogos/', include('apps.catalogos.urls')),
+    path('movimientos/', include('apps.movimientos.urls')),
     path('seguridad/', include('apps.seguridad.urls'))
 ]
