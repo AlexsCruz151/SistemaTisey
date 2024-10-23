@@ -26,9 +26,9 @@ from apps.movimientos.setting_apps import MOVIMIENTOS_APPS
 SECRET_KEY = 'django-insecure-8ggyr#c3j1eh)-)l088xgvjo6-a4plc*b@mzk4+e7fzs9%dhee'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -85,6 +85,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',  # Utilizamos el backend mssql-django
@@ -99,7 +101,7 @@ DATABASES = {
         },
     }
 }
-
+"""
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

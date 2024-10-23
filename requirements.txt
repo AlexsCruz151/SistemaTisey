@@ -8,6 +8,7 @@ mssql-django==1.5
 packaging==24.1
 PyJWT==2.9.0
 pyodbc==5.2.0
+python-decouple==3.8
 pytz==2024.2
 PyYAML==6.0.2
 setuptools==72.1.0
