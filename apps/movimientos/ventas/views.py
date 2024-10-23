@@ -22,7 +22,7 @@ class VentaAPIView(APIView):
                     vendedor = get_object_or_404(Vendedores, id=serializer.validated_data.get('vendedores').id)
                     detalles_data = serializer.validated_data.get('detalles')
                     venta = Venta.objects.create(cliente=cliente, vendedores=vendedor, total = 0)
-                    total_venta = 0;
+                    total_venta = 0
 
                     for detalle_data in detalles_data:
                         cantidad = detalle_data['cantidad']
