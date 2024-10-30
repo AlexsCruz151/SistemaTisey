@@ -9,6 +9,10 @@ class Departamento(models.Model):
     nombre = models.CharField(verbose_name='Nombre', max_length=100)
     class Meta:
         verbose_name_plural = 'Departamentos'
+        permissions = [
+            ("puede_aprobar", "Puede aprobar registros"),
+            ("puede_rechazar", "Puede rechazar registros"),
+        ]
 
     def __str__(self):
         return f"{self.codigo} - {self.nombre}"

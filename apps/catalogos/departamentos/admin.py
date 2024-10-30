@@ -6,3 +6,5 @@ class DepartamentoAdmin(admin.ModelAdmin):
     search_fields = ['id', 'nombre']
     list_display = ['codigo', 'nombre']
 # Register your models here.
+
+
