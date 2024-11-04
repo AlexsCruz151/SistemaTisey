@@ -6,27 +6,16 @@ from .serializers import DepartamentoSerializer
 from drf_yasg.utils import swagger_auto_schema
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
-
 from rest_framework.permissions import IsAuthenticated
 from ...permissions import CustomPermission
-from rest_framework.pagination import PageNumberPagination
-import logging
+from config.utils.Pagination import PaginationMixin
 import logging.handlers
+
 
 # Configura el logger
 logger = logging.getLogger(__name__)
 
 
-class PaginationMixin:
-    pagination_class = PageNumberPagination
-
-    def paginate_queryset(self, queryset, request, view=None):
-        self.paginator = self.pagination_class()
-        self.paginator.page_size = 10  # Puedes definirlo en settings si prefieres
-        return self.paginator.paginate_queryset(queryset, request, view=view)
-
-    def get_paginated_response(self, data):
-        return self.paginator.get_paginated_response(data)
 
 
 class DepartamentoApiView(PaginationMixin,APIView):
@@ -51,7 +40,7 @@ class DepartamentoApiView(PaginationMixin,APIView):
             return self.get_paginated_response(serializer.data)
 
         serializer = DepartamentoSerializer(departamentos, many=True)
-        logger.info("Returning all departamentos without pagination")
+        logger.error("Returning all departamentos without pagination")
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=DepartamentoSerializer, responses={201: DepartamentoSerializer})
@@ -66,7 +55,7 @@ class DepartamentoApiView(PaginationMixin,APIView):
             serializer.save()
             logger.info("Departamento created successfully")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        logger.warning("Failed to create departamento: %s", serializer.errors)
+        logger.error("Failed to create departamento: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -97,7 +86,7 @@ class DepartamentoDetails(APIView):
             logger.info("Departamento updated successfully with ID: %s", pk)
             return Response(serializer.data)
 
-        logger.warning("Failed to update departamento with ID: %s. Errors: %s", pk, serializer.errors)
+        logger.error("Failed to update departamento with ID: %s. Errors: %s", pk, serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=DepartamentoSerializer, responses={200: DepartamentoSerializer})
@@ -117,7 +106,7 @@ class DepartamentoDetails(APIView):
             logger.info("Departamento partially updated successfully with ID: %s", pk)
             return Response(serializer.data)
 
-        logger.warning("Failed to partially update departamento with ID: %s. Errors: %s", pk, serializer.errors)
+        logger.error("Failed to partially update departamento with ID: %s. Errors: %s", pk, serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(responses={204: 'No Content'})
