@@ -9,20 +9,38 @@ from rest_framework.viewsets import ModelViewSet
 
 from rest_framework.permissions import IsAuthenticated
 from ...permissions import CustomPermission
+from rest_framework.pagination import PageNumberPagination
 
 
-class DepartamentoApiView(APIView):
+class PaginationMixin:
+    pagination_class = PageNumberPagination
+
+    def paginate_queryset(self, queryset, request, view=None):
+        self.paginator = self.pagination_class()
+        self.paginator.page_size = 10  # Puedes definirlo en settings si prefieres
+        return self.paginator.paginate_queryset(queryset, request, view=view)
+
+    def get_paginated_response(self, data):
+        return self.paginator.get_paginated_response(data)
+class DepartamentoApiView(PaginationMixin,APIView):
     """
     Vista para listar todos los departamentos o crear un nuevo departamento.
     """
     permission_classes = [IsAuthenticated, CustomPermission]
     model = Departamento  # Aquí definimos el modelo explícitamente
+
     @swagger_auto_schema(responses={200: DepartamentoSerializer(many=True)})
     def get(self, request):
         """
         Listar todos los departamentos.
         """
         departamentos = Departamento.objects.all()
+        page = self.paginate_queryset(departamentos,request)
+
+        if page is not None:
+            serializer = DepartamentoSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = DepartamentoSerializer(departamentos, many=True)
         return Response(serializer.data)
 
