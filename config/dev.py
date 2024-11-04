@@ -19,3 +19,31 @@ DATABASES = {
         },
     }
 }
+
+
+
+# Configura los detalles de conexión a Papertrail
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'papertrail': {
+            'level': 'INFO',  # Nivel de logging
+            'class': 'logging.handlers.SysLogHandler',
+            'formatter': 'verbose',
+            'address': (config('HOST_PAPERTRAIL'), int(config('PORT_PAPERTRAIL'))),
+        },
+    },
+    'root': {
+        'handlers': ['papertrail'],
+        'level': 'INFO',
+    },
+}

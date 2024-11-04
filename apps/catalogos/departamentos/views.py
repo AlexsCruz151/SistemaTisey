@@ -10,6 +10,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from ...permissions import CustomPermission
 from rest_framework.pagination import PageNumberPagination
+import logging
+import logging.handlers
+
+# Configura el logger
+logger = logging.getLogger(__name__)
 
 
 class PaginationMixin:
@@ -22,6 +27,8 @@ class PaginationMixin:
 
     def get_paginated_response(self, data):
         return self.paginator.get_paginated_response(data)
+
+
 class DepartamentoApiView(PaginationMixin,APIView):
     """
     Vista para listar todos los departamentos o crear un nuevo departamento.
@@ -34,14 +41,17 @@ class DepartamentoApiView(PaginationMixin,APIView):
         """
         Listar todos los departamentos.
         """
-        departamentos = Departamento.objects.all()
+        logger.info("GET request to list all departamentos")
+        departamentos = Departamento.objects.all().order_by('id')
         page = self.paginate_queryset(departamentos,request)
 
         if page is not None:
             serializer = DepartamentoSerializer(page, many=True)
+            logger.info("Paginated response for departamentos")
             return self.get_paginated_response(serializer.data)
 
         serializer = DepartamentoSerializer(departamentos, many=True)
+        logger.info("Returning all departamentos without pagination")
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=DepartamentoSerializer, responses={201: DepartamentoSerializer})
@@ -49,10 +59,14 @@ class DepartamentoApiView(PaginationMixin,APIView):
         """
         Crear un nuevo departamento.
         """
+        logger.info("POST request to create a new departamento")
+
         serializer = DepartamentoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("Departamento created successfully")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        logger.warning("Failed to create departamento: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -60,6 +74,8 @@ class DepartamentoDetails(APIView):
     """
     Vista para obtener, actualizar o eliminar un departamento específico.
     """
+
+
     permission_classes = [IsAuthenticated, CustomPermission]
     model = Departamento
     @swagger_auto_schema(request_body=DepartamentoSerializer, responses={200: DepartamentoSerializer})
@@ -67,6 +83,9 @@ class DepartamentoDetails(APIView):
         """
         Actualizar completamente un departamento por su ID.
         """
+
+        logger.info("PUT request to update departamento with ID: %s", pk)
+
         departamento = get_object_or_404(Departamento, id=pk)
         if not departamento:
             return Response({'error': 'Departamento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
@@ -75,7 +94,10 @@ class DepartamentoDetails(APIView):
         serializer = DepartamentoSerializer(departamento, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("Departamento updated successfully with ID: %s", pk)
             return Response(serializer.data)
+
+        logger.warning("Failed to update departamento with ID: %s. Errors: %s", pk, serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=DepartamentoSerializer, responses={200: DepartamentoSerializer})
@@ -83,6 +105,7 @@ class DepartamentoDetails(APIView):
         """
         Actualizar parcialmente un departamento por su ID.
         """
+        logger.info("PATCH request to partially update departamento with ID: %s", pk)
         departamento = get_object_or_404(Departamento, id=pk)
         if not departamento:
             return Response({'error': 'Departamento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
@@ -91,7 +114,10 @@ class DepartamentoDetails(APIView):
         serializer = DepartamentoSerializer(departamento, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            logger.info("Departamento partially updated successfully with ID: %s", pk)
             return Response(serializer.data)
+
+        logger.warning("Failed to partially update departamento with ID: %s. Errors: %s", pk, serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(responses={204: 'No Content'})
@@ -99,10 +125,12 @@ class DepartamentoDetails(APIView):
         """
         Eliminar un departamento por su ID.
         """
+        logger.info("DELETE request to delete departamento with ID: %s", pk)
         departamento = get_object_or_404(Departamento, id=pk)
         if not departamento:
             return Response({'error': 'Departamento no encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
         self.check_object_permissions(request, departamento)  # Verificación de permisos
         departamento.delete()
+        logger.info("Departamento deleted successfully with ID: %s", pk)
         return Response(status=status.HTTP_204_NO_CONTENT)
