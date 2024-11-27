@@ -19,6 +19,7 @@ from apps.seguridad.setting_apps import SEGURIDAD_APPS
 from apps.catalogos.setting_apps import CATALOGOS_APPS
 from apps.movimientos.setting_apps import MOVIMIENTOS_APPS
 import os
+from config.utils.logging_config import ANSIColorFormatter
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -76,6 +77,41 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+# SECURITY WARNING: keep the secret key used in production secret!
+
+
+
+
+DEBUG = 'RENDER' not in os.environ
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'mssql',  # Utilizamos el backend mssql-django
+        'NAME': os.environ.get('DB_NAME'),  # Nombre de la base de datos
+        'USER': os.environ.get('DB_USER'),  # Usuario de la base de datos
+        'PASSWORD': os.environ.get('DB_PASSWORD'),  # Contraseña de la base de datos
+        'HOST': os.environ.get('DB_HOST'),  # IP del servidor SQL Server
+        #'PORT': '1220',  # Puerto del servidor SQL Server (1433 es el predeterminado)
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',  # Especifica el driver ODBC que tienes instalado
+            'extra_params': 'TrustServerCertificate=yes',  # Útil si estás usando SSL sin un certificado de confianza
+        },
+    }
+}
+
 
 
 # Database
@@ -200,7 +236,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
