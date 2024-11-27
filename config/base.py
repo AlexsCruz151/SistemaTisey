@@ -99,16 +99,12 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mssql',  # Utilizamos el backend mssql-django
-        'NAME': os.environ.get('DB_NAME'),  # Nombre de la base de datos
-        'USER': os.environ.get('DB_USER'),  # Usuario de la base de datos
-        'PASSWORD': os.environ.get('DB_PASSWORD'),  # Contraseña de la base de datos
-        'HOST': os.environ.get('DB_HOST'),  # IP del servidor SQL Server
-        #'PORT': '1220',  # Puerto del servidor SQL Server (1433 es el predeterminado)
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',  # Especifica el driver ODBC que tienes instalado
-            'extra_params': 'TrustServerCertificate=yes',  # Útil si estás usando SSL sin un certificado de confianza
-        },
+        'ENGINE': 'sql_server.pytds',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        #'PORT': '1433',
     }
 }
 
