@@ -2,11 +2,18 @@
 # Exit on error
 set -o errexit
 # Instalar el controlador ODBC 17 para SQL Server
-apt-get update && apt-get install -y curl apt-transport-https gnupg
-curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list > /etc/apt/sources.list.d/mssql-release.list
-apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
+# Crear el directorio para almacenar las claves
+mkdir -p /etc/apt/keyrings
 
+# Descargar e instalar la clave de Microsoft en el nuevo formato
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/keyrings/microsoft.gpg
+
+# Agregar el repositorio de Microsoft
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/$(lsb_release -rs)/prod focal main" > /etc/apt/sources.list.d/mssql-release.list
+
+# Actualizar el repositorio e instalar el controlador ODBC
+apt-get update
+ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
 
 # Modify this line as needed for your package manager (pip, poetry, etc.)
