@@ -21,15 +21,17 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mssql',
+        'ENGINE': 'sql_server.pyodbc',  # Asegúrate de que este es el backend que estás utilizando
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
-        # 'PORT': '1433',  # Usa esto solo si necesitas un puerto diferente al predeterminado
+
+        #"'PORT': '1433',  # Opcional: Puedes omitirlo si usas el puerto predeterminado
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
-            'extra_params': 'TrustServerCertificate=yes',
+            'extra_params': 'TrustServerCertificate=yes;',
+            'unicode_results': True,  # Opcional: Mejora la compatibilidad con caracteres Unicode
         },
     }
 }
