@@ -3,7 +3,7 @@ import os
 from decouple import config
 from config.utils.logging_config import ANSIColorFormatter
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
+
 
 
 STATIC_URL = '/static/'
@@ -72,3 +72,16 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
+# # Configuración de JWT
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': True,
+#     'BLACKLIST_AFTER_ROTATION': True,
+#     'ALGORITHM': 'HS256',
+#     'SIGNING_KEY': os.environ.get('SECRET_KEY', default='your secret key'),  # Asegúrate de cambiar esto por una clave secreta real
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+#     'USER_ID_FIELD': 'id',
+#     'USER_ID_CLAIM': 'user_id',
+# }
