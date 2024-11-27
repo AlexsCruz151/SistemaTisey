@@ -97,17 +97,21 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'sql_server.pytds',
+        'ENGINE': 'mssql',
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
-        #'PORT': '1433',
+        # 'PORT': '1433',  # Usa esto solo si necesitas un puerto diferente al predeterminado
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': 'TrustServerCertificate=yes',
+        },
     }
 }
-
 
 
 # Database
