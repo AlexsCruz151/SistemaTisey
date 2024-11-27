@@ -18,12 +18,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 from apps.seguridad.setting_apps import SEGURIDAD_APPS
 from apps.catalogos.setting_apps import CATALOGOS_APPS
 from apps.movimientos.setting_apps import MOVIMIENTOS_APPS
-
+import os
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8ggyr#c3j1eh)-)l088xgvjo6-a4plc*b@mzk4+e7fzs9%dhee'
+# SECRET_KEY = 'django-insecure-8ggyr#c3j1eh)-)l088xgvjo6-a4plc*b@mzk4+e7fzs9%dhee'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -142,7 +143,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,  # Asegúrate de cambiar esto por una clave secreta real
+    'SIGNING_KEY': os.environ.get('SECRET_KEY', default='your secret key'),  # Asegúrate de cambiar esto por una clave secreta real
     'AUTH_HEADER_TYPES': ('Bearer',),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
